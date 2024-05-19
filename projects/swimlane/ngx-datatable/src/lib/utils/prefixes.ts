@@ -2,6 +2,7 @@ import { camelCase } from './camel-case';
 
 const cache = {};
 const testStyle = typeof document !== 'undefined' ? document.createElement('div').style : undefined;
+const isFirefox = typeof window !== 'undefined' ? window.navigator.userAgent.toLowerCase().includes('firefox') : false;
 
 // Get Prefix
 // http://davidwalsh.name/vendor-prefix
@@ -30,6 +31,10 @@ const prefix = (function () {
 
 export function getVendorPrefixedName(property: string) {
   const name = camelCase(property);
+
+  if (property === 'transform' && isFirefox) {
+    return property;
+  }
 
   if (!cache[name]) {
     if (prefix !== undefined && testStyle[prefix.css + property] !== undefined) {
